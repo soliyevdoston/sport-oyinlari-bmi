@@ -1,0 +1,22 @@
+{
+  "name": "aetherscore-platform",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:web\" \"npm run dev:api\"",
+    "dev:web": "npm run dev -w apps/web",
+    "dev:api": "npm run dev -w apps/api",
+    "build": "npm run build -w packages/shared && npm run build -w apps/api && npm run build -w apps/web",
+    "lint": "npm run lint -w packages/shared && npm run lint -w apps/api && npm run lint -w apps/web && npm run lint -w packages/db",
+    "format": "prettier --write .",
+    "db:generate": "npm run prisma:generate -w packages/db"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "prettier": "^3.4.2"
+  }
+}
