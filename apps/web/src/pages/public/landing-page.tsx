@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { MatchLite, SportKey } from "@aetherscore/shared";
 import { allMockMatches, pricing, sports as fallbackSports } from "@/data/mock";
 import { Badge } from "@/components/ui/badge";
@@ -58,6 +58,7 @@ const footballHeroImages = [
 ];
 
 export default function LandingPage() {
+  const navigate = useNavigate();
   const [matches, setMatches] = useState<MatchLite[]>(allMockMatches);
   const [sports, setSports] = useState<SportCatalogItem[]>(
     fallbackSports.map((sport) => ({ ...sport, logoUrl: "", endpoints: [sport.key] }))
@@ -384,14 +385,25 @@ export default function LandingPage() {
                   <th className="px-3 py-3">Status</th>
                   <th className="px-3 py-3">AI Home</th>
                   <th className="px-3 py-3">AI Away</th>
-                  <th className="px-3 py-3">Open</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row) => {
                   const pred = estimateWinProbability(row, sortedMatches);
                   return (
-                    <tr key={`${row.sport}-${row.id}`} className="border-b border-surface-200 bg-white hover:bg-surface-100">
+                    <tr
+                      key={`${row.sport}-${row.id}`}
+                      role="link"
+                      tabIndex={0}
+                      onClick={() => navigate(`/matches/${row.id}?sport=${row.sport}`)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          navigate(`/matches/${row.id}?sport=${row.sport}`);
+                        }
+                      }}
+                      className="cursor-pointer border-b border-surface-200 bg-white transition hover:bg-surface-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-300"
+                    >
                       <td className="px-3 py-2.5">
                         <div className="flex items-center gap-2">
                           <Logo src={row.home.logoUrl} name={row.home.name} size="sm" className="border-surface-300 bg-surface-100 text-surface-700" />
@@ -406,11 +418,6 @@ export default function LandingPage() {
                       <td className="px-3 py-2.5"><Badge tone={statusTone[row.status]}>{statusLabel[row.status]}</Badge></td>
                       <td className="px-3 py-2.5 text-surface-800">{pred.home}%</td>
                       <td className="px-3 py-2.5 text-surface-800">{pred.away}%</td>
-                      <td className="px-3 py-2.5">
-                        <Link to={`/matches/${row.id}?sport=${row.sport}`} className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-700 hover:text-accent-800">
-                          Tafsilot
-                        </Link>
-                      </td>
                     </tr>
                   );
                 })}
