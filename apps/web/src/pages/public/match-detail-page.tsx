@@ -92,6 +92,7 @@ export default function MatchDetailPage() {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const sportParam = searchParams.get("sport") as SportCatalogItem["key"] | null;
+  const isStaticMockMatch = Boolean(id && allMockMatches.some((item) => item.id === id));
   const [remoteMatch, setRemoteMatch] = useState<MatchLite | null>(null);
   const [allMatches, setAllMatches] = useState<MatchLite[]>(allMockMatches);
   const [summary, setSummary] = useState<EventSummary | null>(null);
@@ -112,13 +113,17 @@ export default function MatchDetailPage() {
 
   useEffect(() => {
     if (!id) return;
+    if (isStaticMockMatch) {
+      setRemoteMatch(null);
+      return;
+    }
     fetchSportsEvent(id, sportParam ?? undefined)
       .then((row) => setRemoteMatch(row))
       .catch(() => setRemoteMatch(null));
-  }, [id, sportParam]);
+  }, [id, isStaticMockMatch, sportParam]);
 
   useEffect(() => {
-    fetchSportsFeed(sportParam ?? undefined, { days: 45, limit: 1000 })
+    fetchSportsFeed(sportParam ?? undefined, { days: 30, limit: 1000 })
       .then((rows) =>
         setAllMatches(
           ensureDenseFeed(rows, {
@@ -132,17 +137,24 @@ export default function MatchDetailPage() {
   }, [sportParam]);
 
   useEffect(() => {
-    if (!id || !sportParam) return;
+    if (!id || !sportParam || isStaticMockMatch) {
+      setSummary(null);
+      return;
+    }
     fetchSportsSummary(id, sportParam)
       .then((row) => setSummary(row))
       .catch(() => setSummary(null));
-  }, [id, sportParam]);
+  }, [id, isStaticMockMatch, sportParam]);
 
   useEffect(() => {
+    if (isStaticMockMatch) {
+      setTicketLinks([]);
+      return;
+    }
     apiRequest<{ ticketLinks: TicketLink[] }>(`/matches/${match.id}/tickets`)
       .then((payload) => setTicketLinks(Array.isArray(payload.ticketLinks) ? payload.ticketLinks : []))
       .catch(() => setTicketLinks([]));
-  }, [match.id]);
+  }, [isStaticMockMatch, match.id]);
 
   const prediction = useMemo(() => estimateWinProbability(match, allMatches), [allMatches, match]);
   const homeHistory = useMemo(() => getTeamHistory(match.home.name, allMatches, 8), [allMatches, match.home.name]);

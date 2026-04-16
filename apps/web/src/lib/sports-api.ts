@@ -50,7 +50,7 @@ const FALLBACK_CATALOG: SportCatalogItem[] = [
     label: "Futbol",
     blurb: "Yuqori darajadagi o'yinlar, O'zbekiston ligalari va chuqur match konteksti.",
     logoUrl: "",
-    endpoints: ["soccer/eng.1", "soccer/esp.1", "soccer/ger.1", "soccer/ita.1", "soccer/fra.1", "soccer/uzb.1"]
+    endpoints: ["soccer/eng.1", "soccer/esp.1", "soccer/ger.1", "soccer/ita.1", "soccer/fra.1"]
   },
   {
     key: "basketball",
@@ -297,7 +297,7 @@ export const fetchSportsEvent = async (id: string, sport?: SportCatalogItem["key
     // fallback below
   }
 
-  const rows = await fetchFallbackFeed(sport, { days: 45, limit: 1200 });
+  const rows = await fetchFallbackFeed(sport, { days: 30, limit: 1200 });
   const found = rows.find((row) => row.id === id);
   if (!found) {
     throw new Error("Event not found");
