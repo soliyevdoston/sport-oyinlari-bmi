@@ -534,15 +534,22 @@ export default function MatchDetailPage() {
         </div>
 
         <aside className="space-y-4">
-          <Card tone="contrast" elevated>
-            <div className="flex items-start justify-between gap-2">
+          <Card
+            elevated
+            className="border-accent-300 bg-gradient-to-br from-white via-accent-50/70 to-white shadow-[0_16px_34px_-22px_rgba(37,99,235,0.45)]"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="text-xs uppercase tracking-[0.1em] text-surface-500">AI Match Insight</p>
-                <p className="mt-1 text-xs text-surface-500">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-300 bg-white px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.11em] text-accent-700">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-500" />
+                  Premium AI
+                </span>
+                <p className="mt-2 text-sm font-semibold uppercase tracking-[0.08em] text-surface-800">AI Insight Center</p>
+                <p className="mt-1 text-xs text-surface-600">
                   AI faqat tugma bosilganda ishga tushadi. Token ulangan bo'lsa model javobi, aks holda fallback tahlil.
                 </p>
               </div>
-              <Button variant="secondary" className="h-9 px-3 text-xs" onClick={loadAiInsight}>
+              <Button className="h-10 w-full sm:w-auto sm:px-4" onClick={loadAiInsight}>
                 {hasRequestedAi ? "Qayta AI tahlil" : "AI tahlilni ishga tushirish"}
               </Button>
             </div>
@@ -550,9 +557,10 @@ export default function MatchDetailPage() {
             {aiLoading ? <p className="mt-3 text-sm text-surface-600">AI tahlil tayyorlanmoqda...</p> : null}
             {aiError ? <p className="mt-3 text-sm text-rose-600">{aiError}</p> : null}
             {!aiLoading && !aiInsight && !aiError ? (
-              <p className="mt-3 text-sm text-surface-600">
-                AI tahlil ko'rish uchun yuqoridagi tugmani bosing.
-              </p>
+              <div className="mt-3 rounded-lg border border-dashed border-accent-300 bg-white/80 px-3 py-2.5">
+                <p className="text-sm font-semibold text-surface-800">AI tahlil ko'rish uchun tugmani bosing.</p>
+                <p className="mt-1 text-xs text-surface-600">Ushbu bo'limda ehtimol, taktika, risk va yakuniy AI xulosa chiqadi.</p>
+              </div>
             ) : null}
 
             {aiInsight ? (
