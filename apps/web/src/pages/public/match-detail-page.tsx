@@ -179,7 +179,7 @@ export default function MatchDetailPage() {
   const comparisonStats = useMemo(() => {
     if (summary?.homeStats?.length) {
       return summary.homeStats.slice(0, 10).map((stat, index) => {
-        const awayValue = summary.awayStats[index]?.value ?? "0";
+        const awayValue = summary.awayStats?.[index]?.value ?? "0";
         const homeNumeric = numberFromStat(stat.value);
         const awayNumeric = numberFromStat(awayValue);
         const share = toStatShare(homeNumeric, awayNumeric);
@@ -592,7 +592,7 @@ export default function MatchDetailPage() {
                 <div>
                   <p className="text-xs uppercase tracking-[0.08em] text-surface-500">Asosiy faktorlar</p>
                   <ul className="mt-2 space-y-1 text-sm text-surface-700">
-                    {aiInsight.keyFactors.map((item) => (
+                    {(Array.isArray(aiInsight.keyFactors) ? aiInsight.keyFactors : []).map((item) => (
                       <li key={item}>• {item}</li>
                     ))}
                   </ul>
@@ -601,7 +601,7 @@ export default function MatchDetailPage() {
                 <div>
                   <p className="text-xs uppercase tracking-[0.08em] text-surface-500">Risklar</p>
                   <ul className="mt-2 space-y-1 text-sm text-surface-700">
-                    {aiInsight.riskNotes.map((item) => (
+                    {(Array.isArray(aiInsight.riskNotes) ? aiInsight.riskNotes : []).map((item) => (
                       <li key={item}>• {item}</li>
                     ))}
                   </ul>
