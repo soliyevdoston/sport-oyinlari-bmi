@@ -14,8 +14,11 @@ const allowedOrigins = env.CORS_ORIGIN.split(",")
   .filter(Boolean);
 
 const wildcardToRegex = (pattern: string) => {
-  const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`^${escaped.replace(/\\\*/g, ".*")}$`);
+  const escaped = pattern
+    .split("*")
+    .map((segment) => segment.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join(".*");
+  return new RegExp(`^${escaped}$`);
 };
 
 const originMatchers = allowedOrigins.map(wildcardToRegex);
