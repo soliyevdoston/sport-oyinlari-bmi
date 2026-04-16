@@ -1,0 +1,24 @@
+[build]
+  command = "npm run build -w packages/shared && npm run build -w apps/api && npm run build -w apps/web"
+  publish = "apps/web/dist"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/v1"
+  to = "/.netlify/functions/api/api/v1"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/v1/*"
+  to = "/.netlify/functions/api/api/v1/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

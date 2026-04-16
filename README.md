@@ -43,6 +43,34 @@ Notes:
 - Frontend now defaults to relative API base (`/api/v1`) in production.
 - Current data store is in-memory for MVP/demo; for high-scale production move users/sessions/subscriptions to PostgreSQL/Redis.
 
+## Netlify Deploy (Single Site + Functions)
+This repo is also configured for Netlify via [`netlify.toml`](./netlify.toml):
+- SPA publish directory: `apps/web/dist`
+- API served by Netlify Function: `netlify/functions/api.ts`
+- API path: `/api/v1/*`
+
+Steps:
+1. Import repository in Netlify.
+2. Keep project root as repository root (`.`).
+3. Use default build settings from `netlify.toml` (no manual override needed).
+4. Add environment variables:
+   - `NODE_ENV=production`
+   - `API_PREFIX=/api/v1`
+   - `JWT_ACCESS_SECRET=<strong-random-secret>`
+   - `JWT_REFRESH_SECRET=<strong-random-secret>`
+   - `JWT_ACCESS_TTL=15m`
+   - `JWT_REFRESH_TTL=7d`
+   - `CORS_ORIGIN=*` (or your domain)
+   - `AI_API_KEY=<optional>`
+   - `AI_MODEL_TEXT=gpt-4.1-mini` (optional)
+   - `GUARDIAN_API_KEY=test` (or real key)
+
+Post-deploy checks:
+- `/`
+- `/matches`
+- `/api/v1/health`
+- `/api/v1/news?limit=5`
+
 ## Demo credentials
 - Admin: `admin@scoreai.dev` / `Admin123!`
 - User: `user@scoreai.dev` / `User123!`
