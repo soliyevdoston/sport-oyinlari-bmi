@@ -93,9 +93,10 @@ const formatDateToken = (value: Date) => {
 };
 
 const scoreboardRange = (days: number) => {
+  const safeDays = Math.min(Math.max(days, 1), 30);
   const from = new Date();
   const to = new Date();
-  to.setUTCDate(to.getUTCDate() + days);
+  to.setUTCDate(to.getUTCDate() + safeDays);
   return `${formatDateToken(from)}-${formatDateToken(to)}`;
 };
 

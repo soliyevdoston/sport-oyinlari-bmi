@@ -140,7 +140,7 @@ export default function MatchDetailPage() {
 
   useEffect(() => {
     apiRequest<{ ticketLinks: TicketLink[] }>(`/matches/${match.id}/tickets`)
-      .then((payload) => setTicketLinks(payload.ticketLinks))
+      .then((payload) => setTicketLinks(Array.isArray(payload.ticketLinks) ? payload.ticketLinks : []))
       .catch(() => setTicketLinks([]));
   }, [match.id]);
 
@@ -613,7 +613,7 @@ export default function MatchDetailPage() {
           <Card elevated>
             <p className="text-xs uppercase tracking-[0.08em] text-surface-500">Ticket providers</p>
             <div className="mt-3 space-y-2">
-              {ticketLinks.length ? (
+              {Array.isArray(ticketLinks) && ticketLinks.length ? (
                 ticketLinks.map((ticket) => (
                   <Button
                     key={ticket.id}
